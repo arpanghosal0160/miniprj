@@ -122,22 +122,49 @@ def interpret_and_execute(command):
         webbrowser.open("https://www.hotstar.com/in/sports/cricket/ipl-2021/match/live-streaming")
 
 
-    elif "find restaurant" in command or "food" in command:
+    elif "i am feeling hungry" in command or "food" in command:
         speak("What type of food are you looking for?")
         food_type = recognize_speech()
         speak(f"Searching for {food_type} restaurants nearby.")
         print(f"Searching for {food_type} restaurants nearby...")
         webbrowser.open(f"https://www.google.com/maps/search/{food_type}+restaurants+near+me")
-    
+
+    elif "i want to order food" in command:
+        speak("What type of food do you want to eat?")
+        food_type = recognize_speech()
+
+        speak("Would you like to order from Swiggy or Zomato?")
+        platform = recognize_speech()
+
+        if "swiggy" in platform:
+            speak(f"Searching for the cheapest {food_type} on Swiggy.")
+            print(f"Searching for the cheapest {food_type} on Swiggy...")
+            food_order_url = f"https://www.swiggy.com/search?query={food_type}&sortBy=price_low_to_high"
+        
+        elif "zomato" in platform:
+            speak(f"Searching for the cheapest {food_type} on Zomato.")
+            print(f"Searching for the cheapest {food_type} on Zomato...")
+            food_order_url = f"https://www.zomato.com/india/restaurants?q={food_type}&sort=cost_low"
+
+        else:
+            speak("Sorry, I can only search on Swiggy or Zomato for now.")
+            print("Invalid platform. Try again.")
+            return
+
+        speak(f"Opening {platform} with sorted results for the cheapest {food_type}.")
+        print(f"Opening {platform}...")
+        webbrowser.open(food_order_url)
+
     elif "exit" in command:
         speak("Goodbye! Exiting the assistant.")
         print("Goodbye! Exiting the assistant.")
         exit()
     
     else:
-        response = "Sorry, I didn't understand the command."
-        print(response)
-        speak(response)
+        # If the command is not recognized, perform a Google search
+        speak("I am not capable of this operation. Performing a Google search instead.")
+        print(f"Performing a Google search for: {command}")
+        webbrowser.open(f"https://www.google.com/search?q={command}")
 
 def main():
     app_intro()
