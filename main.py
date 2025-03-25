@@ -5,6 +5,9 @@ from core.weather import get_weather
 from core.news import get_news, categorize_news, summarize_text
 from core.ai_tasks import answer_question
 from core.desktop_ops import open_file, search_files
+from core.order import order_food  # Import the order_food function
+from core.order_items import shop_items  # Import the shop_items function
+from core.summarizer import summarize_files  # Import the summarize_files function
 
 # Initialize text-to-speech engine
 engine = pyttsx3.init()
@@ -18,7 +21,7 @@ def app_intro():
     intro_text = (
         "Welcome to Aagni - Your AI-Powered Desktop Assistant! "
         "I can help you with weather updates, news, AI-driven queries, "
-        "file operations, and even voice-based interaction. How can I assist you today?"
+        "file operations, food ordering, shopping, and even voice-based interaction. How can I assist you today?"
     )
     print(intro_text)
     speak(intro_text)
@@ -121,39 +124,23 @@ def interpret_and_execute(command):
         print("Opening Hotstar for live IPL match...")
         webbrowser.open("https://www.hotstar.com/in/sports/cricket/ipl-2021/match/live-streaming")
 
-
-    elif "i am feeling hungry" in command or "food" in command:
+    elif "i am feeling hungry" in command:
         speak("What type of food are you looking for?")
         food_type = recognize_speech()
         speak(f"Searching for {food_type} restaurants nearby.")
         print(f"Searching for {food_type} restaurants nearby...")
         webbrowser.open(f"https://www.google.com/maps/search/{food_type}+restaurants+near+me")
 
-    elif "i want to order food" in command:
-        speak("What type of food do you want to eat?")
-        food_type = recognize_speech()
+    elif "order food" in command:
+        # Call the order_food function from core/order.py
+        order_food()
 
-        speak("Would you like to order from Swiggy or Zomato?")
-        platform = recognize_speech()
+    elif "let's do shopping" in command or "shopping" in command:
+        # Call the shop_items function from core/order_items.py
+        shop_items()
 
-        if "swiggy" in platform:
-            speak(f"Searching for the cheapest {food_type} on Swiggy.")
-            print(f"Searching for the cheapest {food_type} on Swiggy...")
-            food_order_url = f"https://www.swiggy.com/search?query={food_type}&sortBy=price_low_to_high"
-        
-        elif "zomato" in platform:
-            speak(f"Searching for the cheapest {food_type} on Zomato.")
-            print(f"Searching for the cheapest {food_type} on Zomato...")
-            food_order_url = f"https://www.zomato.com/india/restaurants?q={food_type}&sort=cost_low"
-
-        else:
-            speak("Sorry, I can only search on Swiggy or Zomato for now.")
-            print("Invalid platform. Try again.")
-            return
-
-        speak(f"Opening {platform} with sorted results for the cheapest {food_type}.")
-        print(f"Opening {platform}...")
-        webbrowser.open(food_order_url)
+    elif "summarize files" in command or "summarizer" in command:
+        summarize_files()
 
     elif "exit" in command:
         speak("Goodbye! Exiting the assistant.")
