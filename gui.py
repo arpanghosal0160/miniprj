@@ -115,6 +115,18 @@ class AagniApp:
         elif "open youtube" in command:
             self.output_text.insert(tk.END, "Opening YouTube...\n")
             webbrowser.open("https://www.youtube.com")
+        elif "summarize files" in command or "summarizer" in command:
+            from core.summarizer import summarize_files
+            summarize_files()
+            self.output_text.insert(tk.END, "Summarization completed. Check the Notepad instance for the summary.\n")
+        elif "let's do shopping" in command or "shopping" in command:
+            from core.order_items import shop_items
+            shop_items()
+            self.output_text.insert(tk.END, "Shopping results displayed on Amazon.\n")
+        elif "order food" in command:
+            from core.order import order_food
+            order_food()
+            self.output_text.insert(tk.END, "Food ordering process initiated.\n")
         elif "exit" in command:
             self.root.quit()
         else:
