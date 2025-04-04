@@ -4,7 +4,7 @@ WEATHERBIT_API_KEY = "3033e448f8c94ba9be8c6363efcbcedd"
 WEATHERAPI_KEY = "69d2dfa4bc0f443c822141130252901"
 
 def get_weather(location):
-    print("\nFetching weather...")
+    weather_info = []
 
     # Weatherbit API
     try:
@@ -15,11 +15,11 @@ def get_weather(location):
         if "data" in data:
             temp = data["data"][0]["temp"]
             weather_desc = data["data"][0]["weather"]["description"]
-            print(f"Weatherbit: {weather_desc}, {temp}°C")
+            weather_info.append(f"Weatherbit: {weather_desc}, {temp}°C")
         else:
-            print("Weatherbit API Error.")
+            weather_info.append("Weatherbit API Error.")
     except Exception as e:
-        print(f"Error fetching Weatherbit data: {e}")
+        weather_info.append(f"Error fetching Weatherbit data: {e}")
 
     # WeatherAPI
     try:
@@ -30,8 +30,11 @@ def get_weather(location):
         if "current" in data:
             temp = data["current"]["temp_c"]
             weather_desc = data["current"]["condition"]["text"]
-            print(f"WeatherAPI: {weather_desc}, {temp}°C")
+            weather_info.append(f"WeatherAPI: {weather_desc}, {temp}°C")
         else:
-            print(f"WeatherAPI Error: {data.get('error', {}).get('message', 'Unknown error')}")
+            weather_info.append(f"WeatherAPI Error: {data.get('error', {}).get('message', 'Unknown error')}")
     except Exception as e:
-        print(f"Error fetching WeatherAPI data: {e}")
+        weather_info.append(f"Error fetching WeatherAPI data: {e}")
+
+    # Join all responses into a single string and return
+    return "\n".join(weather_info)

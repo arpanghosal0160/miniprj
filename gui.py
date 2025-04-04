@@ -82,8 +82,12 @@ class AagniApp:
     def interpret_and_execute(self, command):
         if "weather" in command:
             city = self.prompt_user("Enter city name:")
-            weather = get_weather(city)
-            self.output_text.insert(tk.END, f"Weather in {city}: {weather}\n")
+            if city:
+                weather = get_weather(city)  # Now it returns a string
+                self.output_text.insert(tk.END, f"Weather in {city}:\n{weather}\n")
+            else:
+                self.output_text.insert(tk.END, "No city provided. Unable to fetch weather details.\n")
+
         elif "news" in command:
             query = self.prompt_user("What kind of news are you interested in?")
             category = categorize_news(query)
@@ -115,6 +119,15 @@ class AagniApp:
         elif "open youtube" in command:
             self.output_text.insert(tk.END, "Opening YouTube...\n")
             webbrowser.open("https://www.youtube.com")
+        elif "live ipl match" in command:
+            self.output_text.insert(tk.END, "Opening Hotstar for live IPL match...\n")
+            webbrowser.open("https://www.hotstar.com/in/sports/cricket/ipl-2021/match/live-streaming")
+        elif "show me my schedule" in command:
+            self.output_text.insert(tk.END, "Opening Google Calendar...\n")
+            webbrowser.open("https://calendar.google.com")
+        elif "show me my photos" in command:
+            self.output_text.insert(tk.END, "Opening Google Photos...\n")
+            webbrowser.open("https://photos.google.com")
         elif "summarize files" in command or "summarizer" in command:
             from core.summarizer import summarize_files
             summarize_files()
@@ -130,7 +143,9 @@ class AagniApp:
         elif "exit" in command:
             self.root.quit()
         else:
-            self.output_text.insert(tk.END, "Sorry, I didn't understand the command.\n")
+            # Perform a Google search for unrecognized commands
+            self.output_text.insert(tk.END, f"Sorry, I didn't understand the command. Performing a Google search for: {command}\n")
+            webbrowser.open(f"https://www.google.com/search?q={command}")
 
     def prompt_user(self, prompt):
         return simpledialog.askstring("Input", prompt)
